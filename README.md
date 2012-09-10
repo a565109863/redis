@@ -39,7 +39,7 @@ To learn more about Composer visit http://getcomposer.org/
 
 ### Description
 
-callable __redis\client__( [string _$host = '127.0.0.1'_ [, int _$port = 6379_]] )
+callable __client__( [string _$host = '127.0.0.1'_ [, int _$port = 6379_]] )
 
 The returned function accepts a Redis command as a string.
 
