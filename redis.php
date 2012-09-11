@@ -3,7 +3,7 @@
 	namespace phpish\redis;
 
 	class SocketException extends \Exception { }
-	class RedisException extends \Exception { }
+	class ProtocolException extends \Exception { }
 
 	const STATUS_REPLY = '+';
 	const ERROR_REPLY = '-';
@@ -57,7 +57,7 @@
 					return $data;
 
 				case ERROR_REPLY:
-					throw new RedisException(substr($data, 4));
+					throw new ProtocolException(substr($data, 4));
 
 				case INTEGER_REPLY:
 					return $data;
@@ -77,7 +77,7 @@
 					return $multi_bulk_reply;
 
 				default:
-					throw new RedisException("Unknown Reply Type: $reply");
+					throw new ProtocolException("Unknown Reply Type: $reply");
 			}
 		}
 
