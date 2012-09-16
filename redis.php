@@ -20,10 +20,25 @@
 
 		return function ($cmd) use ($fp)
 		{
+			$cmd = trim($cmd);
 			if ('quit' == strtolower($cmd)) return fclose($fp);
 			$return = fwrite($fp, _multi_bulk_reply($cmd));
 			if ($return === FALSE) 	throw new SocketException();
-			return _reply($fp);
+			$reply = _reply($fp);
+
+			if ('hgetall' === substr(strtolower($cmd), 0, 7))
+			{
+				$reply_count = count($reply);
+				$hash_reply = array();
+				for ($i = 0; $i < $reply_count; $i += 2)
+				{
+					$hash_reply[$reply[$i]] = $reply[$i+1];
+				}
+
+				return $hash_reply;
+			}
+
+			return $reply;
 		};
 	}
 
@@ -73,7 +88,7 @@
 					$bulk_reply_count = intval($data);
 					if ($bulk_reply_count < 0) return NULL;
 					$multi_bulk_reply = array();
-					foreach(range(1, $bulk_reply_count) as $i) $multi_bulk_reply[] = _reply();
+					foreach(range(1, $bulk_reply_count) as $i) $multi_bulk_reply[] = _reply($fp);
 					return $multi_bulk_reply;
 
 				default:
