@@ -65,7 +65,7 @@
 			$reply_type = $reply[0];
 			$data = substr($reply, 1);
 
-			switch($reply[0])
+			switch($reply_type)
 			{
 				case STATUS_REPLY:
 					if ('ok' == strtolower($data)) return true;
@@ -88,7 +88,7 @@
 					$bulk_reply_count = intval($data);
 					if ($bulk_reply_count < 0) return NULL;
 					$multi_bulk_reply = array();
-					foreach(range(1, $bulk_reply_count) as $i) $multi_bulk_reply[] = _reply($fp);
+					for($i = 0; $i < $bulk_reply_count; $i++) $multi_bulk_reply[] = _reply($fp);
 					return $multi_bulk_reply;
 
 				default:
